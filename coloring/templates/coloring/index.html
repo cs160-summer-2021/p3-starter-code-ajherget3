@@ -8,6 +8,9 @@
 
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 
 	<style type="text/css">
 		#color-palette {
@@ -35,6 +38,16 @@
 		    margin-right: auto;
 		    display: block;
 		}
+
+		#studio {
+			font-size: 100px;
+			padding-left: 25px;
+			font-family: Montserrat;
+		}
+
+		#controls {
+			margin: auto;
+		}
 	</style>
 
 	<script type="text/javascript" canvas="canvas">
@@ -43,10 +56,13 @@
 
 			// coloring page
 			var mandala = {
-				history: [],
 				item: null,
 				lastClicked: null,
-				filePath: '/static/coloring/images/mandala-freepik.svg'
+				filePath: '/static/coloring/images/mandala-freepik.svg',
+
+				// added the following 2 properties
+				coloringHistory: [],
+				index: 0
 			};
 
 			// color palette
@@ -65,18 +81,13 @@
 				    		// Color pallette keeps track of the full history of colors, though we
 				    		// only color in with the most-recent color.
 				        hit.item.fillColor = cp.history[cp.history.length - 1];
-						history.push(mandela.item);
+
+						// somehow store mandala history
+						mandala.coloringHistory.push();
 				    }
 				}
 			}
 
-			function undoFunc() {
-				
-			}
-
-			function redoFunc() {
-
-			}
 
 			// create a color palette with the given colors
 			function createColorPalette(colors){
@@ -128,17 +139,55 @@
 	</script>
 </head>
 <body>
+	<div id = "studio" style="position: relative"> Studio </div>
+	<canvas id="myCanvas" width="750px" height="750px" style="position: relative"></canvas>
+	<div class = "row" id="color-palette" style="position: relative"></div>
+		<div class = "row" id="newbuttons" style="position: relative">
+			<button id="undo" onclick="undoFunc()">
+				Undo
+			</button>
+			<button id="redo" onclick="redoFunc()">
+				Redo
+			</button>
+			<button id="zoomin" onclick="zoomInFunc()">
+				Zoom In
+			</button>
+			<button id="zoomout" onclick="zoomOutFunc()">
+				Zoom Out
+			</button>
+		</div>
 
-	<canvas id="myCanvas" width="750px" height="750px"></canvas>
-	<div id="color-palette"></div>
-	<div id="newbuttons">
-		<button id="undo" onclick="undoFunc()">
-			Undo
-		</button>
-		<button id="redo" onclick="redoFunc()">
-			Redo
-		</button>
-	</div>
-
+		<script type="text/javascript">
+			var canvas = document.getElementById('myCanvas');
+			function undoFunc() {
+					if (index > 0) {
+						// restore previous mandala state
+						mandala.item = mandala.coloringHistory[index - 1];
+						index = index -1;
+					}
+				}
+	
+				function redoFunc() {
+					if (index < coloringHistory.length - 1) {
+						// go forward to next mandala state
+						mandala = coloringHistory[index + 1];
+						index = index + 1;
+					}
+				}
+	
+				function zoomInFunc() {
+					var canvasWidth = canvas.clientWidth;
+					var canvasHeight = canvas.clientHeight;
+					canvas.style.width = (canvasWidth * 2) + "px";
+					canvas.style.height = (canvasHeight * 2) + "px";
+				}
+	
+				function zoomOutFunc() {
+					var canvasWidth = canvas.clientWidth;
+					var canvasHeight = canvas.clientHeight;
+					canvas.style.width = (canvasWidth / 2) + "px";
+					canvas.style.height = (canvasHeight / 2) + "px";
+				}
+		</script>
 </body>
 </html>
