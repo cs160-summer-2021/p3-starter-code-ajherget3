@@ -43,6 +43,7 @@
 
 			// coloring page
 			var mandala = {
+				history: [],
 				item: null,
 				lastClicked: null,
 				filePath: '/static/coloring/images/mandala-freepik.svg'
@@ -64,8 +65,17 @@
 				    		// Color pallette keeps track of the full history of colors, though we
 				    		// only color in with the most-recent color.
 				        hit.item.fillColor = cp.history[cp.history.length - 1];
+						history.push(mandela.item);
 				    }
 				}
+			}
+
+			function undoFunc() {
+				
+			}
+
+			function redoFunc() {
+
 			}
 
 			// create a color palette with the given colors
@@ -121,5 +131,14 @@
 
 	<canvas id="myCanvas" width="750px" height="750px"></canvas>
 	<div id="color-palette"></div>
+	<div id="newbuttons">
+		<button id="undo" onclick="undoFunc()">
+			Undo
+		</button>
+		<button id="redo" onclick="redoFunc()">
+			Redo
+		</button>
+	</div>
+
 </body>
 </html>
